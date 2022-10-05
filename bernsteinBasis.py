@@ -4,13 +4,12 @@ Created on Mon Sep 19 09:42:57 2022
 
 @author: Matt Goodson
 
-Notes: Not a core requirement (so rigorous testing has not been implemented)
+Notes: Solution to question 42
 """
 
 import unittest
 import math
 
-# Need to actually define what the function should do
 def evaluateBernsteinBasis1D(variate,degree,basis_idx):
     v = (variate + 1)/2
     term1 = math.comb(degree,basis_idx)
