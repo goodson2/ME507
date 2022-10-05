@@ -4,7 +4,8 @@ Created on Mon Sep 19 09:42:57 2022
 
 @author: Matt Goodson
 
-Notes: Not a core requirement (so rigorous testing has not been implemented)
+Notes: This is incomplete code that does not work - Use taylorExpansion.py and 
+comment out the top half to run the error component.
 """
 
 import numpy as np
