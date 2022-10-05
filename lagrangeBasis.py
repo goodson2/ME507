@@ -4,14 +4,16 @@ Created on Mon Sep 19 09:42:57 2022
 
 @author: Matt Goodson
 
-Notes: Not a core requirement (so rigorous testing has not been implemented)
+Notes: Solution to question 38
 """
 import unittest
 import numpy as np
 
 # Need to actually define what the function should do
 def evaluateLagrangeBasis1D(variate,degree,basis_idx):
-    # To be more robust and allow for higher degrees the xj term should be a function of degree
+    # To be more robust and allow for higher degrees the xj term 
+    # should be a function of degree. As it currently stand the function is
+    # only valid through degree 2.
     step = 2/degree
     xj = np.arange(-1,2,step)
     val = 1 
