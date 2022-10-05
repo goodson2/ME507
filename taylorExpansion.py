@@ -5,6 +5,8 @@ Created on Mon Sep 19 09:42:57 2022
 @author: Matt Goodson
 
 Notes: Not a core requirement (so rigorous testing has not been implemented)
+- Top half of code runs the different taylor expansions for sin, exp, and erfc
+- Bottom half computes error of taylor expansions compared to analytical solution
 """
 
 import numpy as np
