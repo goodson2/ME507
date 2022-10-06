@@ -3,6 +3,8 @@
 Created on Mon Sep 26 12:39:15 2022
 
 @author: mgood
+
+Notes: Solution to Question 44
 """
 import numpy
 import unittest
