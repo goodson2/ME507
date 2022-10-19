@@ -5,69 +5,36 @@ Created on Fri Oct 14 14:11:49 2022
 Author: Matt Goodson
 Notes: Solves question 58
 """
+####### Question 58 - Brian Merritt solution (change names to match my code)
 import numpy
-from basis import evaluateBernsteinBasis1D
+import mesh_adapted
+import basis
 import matplotlib.pyplot as plt
 
 
-
-
-xElem0 = numpy.linspace(-1,1,100)
-xElem1 = numpy.linspace(0,1,100)
-xElem2 = numpy.linspace(1,2,100)
-xElem3 = numpy.linspace(2,3,100)
-xElem4 = numpy.linspace(3,4,100)
-val00 = numpy.zeros(len(xElem1))
-val01 = numpy.zeros(len(xElem1))
-val02 = numpy.zeros(len(xElem1))
-val03 = numpy.zeros(len(xElem1))
-val04 = numpy.zeros(len(xElem1))
-val05 = numpy.zeros(len(xElem1))
-val06 = numpy.zeros(len(xElem1))
-val07 = numpy.zeros(len(xElem1))
-val08 = numpy.zeros(len(xElem1))
-val09 = numpy.zeros(len(xElem1))
-val10 = numpy.zeros(len(xElem1))
-val11 = numpy.zeros(len(xElem1))
-val12 = numpy.zeros(len(xElem1))
-val13 = numpy.zeros(len(xElem1))
-# Up to 13
-
-for i in range(0,len(xElem1)):
-    val00[i] = evaluateBernsteinBasis1D(xElem0[i],1,0)
-    val01[i] = evaluateBernsteinBasis1D(xElem0[i],1,1)
-    val02[i] = evaluateBernsteinBasis1D(xElem0[i],2,0)
-    val03[i] = evaluateBernsteinBasis1D(xElem0[i],2,1)
-    val04[i] = evaluateBernsteinBasis1D(xElem0[i],2,2)
-    val05[i] = evaluateBernsteinBasis1D(xElem0[i],3,0)
-    val06[i] = evaluateBernsteinBasis1D(xElem0[i],3,1)
-    val07[i] = evaluateBernsteinBasis1D(xElem0[i],3,2)
-    val08[i] = evaluateBernsteinBasis1D(xElem0[i],3,3)
-    val09[i] = evaluateBernsteinBasis1D(xElem0[i],4,0)
-    val10[i] = evaluateBernsteinBasis1D(xElem0[i],4,1)
-    val11[i] = evaluateBernsteinBasis1D(xElem0[i],4,2)
-    val12[i] = evaluateBernsteinBasis1D(xElem0[i],4,3)
-    val13[i] = evaluateBernsteinBasis1D(xElem0[i],4,4)
-
-
-
-
-
-
-plt.figure(0)
-plt.plot(xElem1,val00)
-plt.plot(xElem1,val01)
-plt.plot(xElem2,val02)
-plt.plot(xElem2,val03)
-plt.plot(xElem2,val04)
-plt.plot(xElem3,val05)
-plt.plot(xElem3,val06)
-plt.plot(xElem3,val07)
-plt.plot(xElem3,val08)
-plt.plot(xElem4,val09)
-plt.plot(xElem4,val10)
-plt.plot(xElem4,val11)
-plt.plot(xElem4,val12)
-plt.plot(xElem4,val13)
-
-
+domain = [-1,1]
+xmin = domain[0]
+xmax = domain[1]
+domain2 = [0,4]
+xmin2 = domain2[0]
+xmax2 = domain2[1]
+x_all = numpy.linspace(xmin,xmax,100)
+degree = [ 1,2,3,4] 
+node_coords, ien_array = mesh_adapted.generateMesh(xmin2,xmax2,degree)
+num_elems = len(degree)
+eval_basis = basis.evaluateBernsteinBasis1D
+xelem = numpy.zeros((len(x_all),num_elems))
+Bernstein_basis = numpy.zeros((len(x_all),sum(degree)+len(degree)))
+column = 0
+element = 0
+for element in range(0,num_elems):
+    xelem[:,element] = numpy.linspace(node_coords[ien_array[element][0]],node_coords[ien_array[element][-1]],100)
+    deg = degree[element]
+    for basis_idx in range(0,len(ien_array[element])):
+        for xi in range(0,len(x_all)):
+            Bernstein_basis[xi,column] = eval_basis(x_all[xi], deg, basis_idx)
+        plt.plot(xelem[:,element],Bernstein_basis[:,column],'-')
+        column = column + 1
+plt.xlim(0,4)
+plt.ylim(0,1)
+plt.savefig('Q58.png', dpi=600)
