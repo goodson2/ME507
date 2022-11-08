@@ -7,65 +7,9 @@ Created on Mon Nov  7 10:19:23 2022
 
 import numpy
 import unittest
-import basis_b ## USER DEFINED MODULE
+import basis ## USER DEFINED MODULE
 import meshGenerate_New ## USER DEFINED MODULE
 import quadrature
-
-class Test_assembleGramMatrix( unittest.TestCase ):
-    def test_linear_lagrange( self ):
-        domain = [ 0, 1 ]
-        degree = [ 1, 1 ]
-        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
-        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis_b.evalLagrangeBasis1D )
-        gold_gram_matrix = numpy.array( [ [1/6, 1/12, 0], [1/12, 1/3, 1/12], [0, 1/12, 1/6] ] )
-        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
-
-    def test_quadratic_lagrange( self ):
-        domain = [ 0, 1 ]
-        degree = [ 2, 2 ]
-        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
-        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis_b.evalLagrangeBasis1D )
-        gold_gram_matrix = numpy.array( [ [1/15, 1/30, -1/60, 0, 0 ], [1/30, 4/15, 1/30, 0, 0], [-1/60, 1/30, 2/15, 1/30, -1/60], [ 0, 0, 1/30, 4/15, 1/30], [0, 0, -1/60, 1/30, 1/15] ] )
-        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
-    
-    def test_cubic_lagrange( self ):
-        domain = [ 0, 1 ]
-        degree = [ 3, 3 ]
-        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
-        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis_b.evalLagrangeBasis1D )
-        gold_gram_matrix = numpy.array( [ [ 0.03809524,  0.02946429, -0.01071429,  0.00565476,  0.00000000,  0.00000000,  0.00000000 ], 
-                                          [ 0.02946429,  0.19285714, -0.02410714, -0.01071429,  0.00000000,  0.00000000,  0.00000000 ], 
-                                          [-0.01071429, -0.02410714,  0.19285714,  0.02946429,  0.00000000,  0.00000000,  0.00000000 ], 
-                                          [ 0.00565476, -0.01071429,  0.02946429,  0.07619048,  0.02946429, -0.01071429,  0.00565476 ], 
-                                          [ 0.00000000,  0.00000000,  0.00000000,  0.02946429,  0.19285714, -0.02410714, -0.01071429 ], 
-                                          [ 0.00000000,  0.00000000,  0.00000000, -0.01071429, -0.02410714,  0.19285714,  0.02946429 ], 
-                                          [ 0.00000000,  0.00000000,  0.00000000,  0.00565476, -0.01071429,  0.02946429,  0.03809524 ] ] )
-        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
-    
-    def test_linear_bernstein( self ):
-        domain = [ 0, 1 ]
-        degree = [ 1, 1 ]
-        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
-        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis_b.evalBernsteinBasis1D )
-        gold_gram_matrix = numpy.array( [ [1/6, 1/12, 0], [1/12, 1/3, 1/12], [0, 1/12, 1/6] ] )
-        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
-
-    def test_quadratic_bernstein( self ):
-        domain = [ 0, 1 ]
-        degree = [ 2, 2 ]
-        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
-        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis_b.evalBernsteinBasis1D )
-        gold_gram_matrix = numpy.array( [ [1/10, 1/20, 1/60, 0, 0 ], [1/20, 1/15, 1/20, 0, 0 ], [1/60, 1/20, 1/5, 1/20, 1/60], [0, 0, 1/20, 1/15, 1/20], [0, 0, 1/60, 1/20, 1/10] ] )
-        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
-    
-    def test_cubic_bernstein( self ):
-        domain = [ 0, 1 ]
-        degree = [ 3, 3 ]
-        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
-        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis_b.evalBernsteinBasis1D )
-        gold_gram_matrix = numpy.array( [ [1/14, 1/28, 1/70, 1/280, 0, 0, 0 ], [1/28, 3/70, 9/280, 1/70, 0, 0, 0 ], [1/70, 9/280, 3/70, 1/28, 0, 0, 0 ], [1/280, 1/70, 1/28, 1/7, 1/28, 1/70, 1/280], [0, 0, 0, 1/28, 3/70, 9/280, 1/70], [0, 0, 0, 1/70, 9/280, 3/70, 1/28], [0, 0, 0, 1/280, 1/70, 1/28, 1/14 ] ] )
-        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
-        
 
 def assembleGramMatrix(node_coords, ien_array,solution_basis):
     num_elems = len(ien_array)
@@ -86,4 +30,59 @@ def assembleGramMatrix(node_coords, ien_array,solution_basis):
                     M[A+node_idx,B+node_idx] += solution_basis(qp[k],elem_degree,A,elem_domain) * solution_basis(qp[k],elem_degree,B,elem_domain) * w[k] * derivative   
     return M
 
+class Test_assembleGramMatrix( unittest.TestCase ):
+    def test_linear_lagrange( self ):
+        domain = [ 0, 1 ]
+        degree = [ 1, 1 ]
+        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis.evalLagrangeBasis1D )
+        gold_gram_matrix = numpy.array( [ [1/6, 1/12, 0], [1/12, 1/3, 1/12], [0, 1/12, 1/6] ] )
+        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
+
+    def test_quadratic_lagrange( self ):
+        domain = [ 0, 1 ]
+        degree = [ 2, 2 ]
+        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis.evalLagrangeBasis1D )
+        gold_gram_matrix = numpy.array( [ [1/15, 1/30, -1/60, 0, 0 ], [1/30, 4/15, 1/30, 0, 0], [-1/60, 1/30, 2/15, 1/30, -1/60], [ 0, 0, 1/30, 4/15, 1/30], [0, 0, -1/60, 1/30, 1/15] ] )
+        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
+    
+    def test_cubic_lagrange( self ):
+        domain = [ 0, 1 ]
+        degree = [ 3, 3 ]
+        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis.evalLagrangeBasis1D )
+        gold_gram_matrix = numpy.array( [ [ 0.03809524,  0.02946429, -0.01071429,  0.00565476,  0.00000000,  0.00000000,  0.00000000 ], 
+                                          [ 0.02946429,  0.19285714, -0.02410714, -0.01071429,  0.00000000,  0.00000000,  0.00000000 ], 
+                                          [-0.01071429, -0.02410714,  0.19285714,  0.02946429,  0.00000000,  0.00000000,  0.00000000 ], 
+                                          [ 0.00565476, -0.01071429,  0.02946429,  0.07619048,  0.02946429, -0.01071429,  0.00565476 ], 
+                                          [ 0.00000000,  0.00000000,  0.00000000,  0.02946429,  0.19285714, -0.02410714, -0.01071429 ], 
+                                          [ 0.00000000,  0.00000000,  0.00000000, -0.01071429, -0.02410714,  0.19285714,  0.02946429 ], 
+                                          [ 0.00000000,  0.00000000,  0.00000000,  0.00565476, -0.01071429,  0.02946429,  0.03809524 ] ] )
+        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
+    
+    def test_linear_bernstein( self ):
+        domain = [ 0, 1 ]
+        degree = [ 1, 1 ]
+        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis.evalBernsteinBasis1D )
+        gold_gram_matrix = numpy.array( [ [1/6, 1/12, 0], [1/12, 1/3, 1/12], [0, 1/12, 1/6] ] )
+        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
+
+    def test_quadratic_bernstein( self ):
+        domain = [ 0, 1 ]
+        degree = [ 2, 2 ]
+        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis.evalBernsteinBasis1D )
+        gold_gram_matrix = numpy.array( [ [1/10, 1/20, 1/60, 0, 0 ], [1/20, 1/15, 1/20, 0, 0 ], [1/60, 1/20, 1/5, 1/20, 1/60], [0, 0, 1/20, 1/15, 1/20], [0, 0, 1/60, 1/20, 1/10] ] )
+        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
+    
+    def test_cubic_bernstein( self ):
+        domain = [ 0, 1 ]
+        degree = [ 3, 3 ]
+        node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+        test_gram_matrix = assembleGramMatrix( node_coords = node_coords, ien_array = ien_array, solution_basis = basis.evalBernsteinBasis1D )
+        gold_gram_matrix = numpy.array( [ [1/14, 1/28, 1/70, 1/280, 0, 0, 0 ], [1/28, 3/70, 9/280, 1/70, 0, 0, 0 ], [1/70, 9/280, 3/70, 1/28, 0, 0, 0 ], [1/280, 1/70, 1/28, 1/7, 1/28, 1/70, 1/280], [0, 0, 0, 1/28, 3/70, 9/280, 1/70], [0, 0, 0, 1/70, 9/280, 3/70, 1/28], [0, 0, 0, 1/280, 1/70, 1/28, 1/14 ] ] )
+        self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
+        
 unittest.main()
