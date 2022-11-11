@@ -8,7 +8,7 @@ Notes: Solves problem 49
 
 
 import scipy
-# from scipy import optimize
+from scipy import optimize
 import numpy
 import unittest
 # from src import basis

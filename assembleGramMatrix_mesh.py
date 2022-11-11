@@ -21,13 +21,14 @@ def assembleGramMatrix(node_coords, ien_array,solution_basis):
         # node_idx = elem*elem_degree
         elem_domain = [node_coords[ien_array[elem][0]],node_coords[ien_array[elem][-1]]]
         qp, w = quadrature.computeGaussLegendreQuadrature(elem_nodes)
+        qp_domain = [-1,1]
         num_basis_vec = elem_degree + 1
         derivative = (elem_domain[-1] - elem_domain[0]) / 2
         # M = numpy.zeros((num_basis_vec,num_basis_vec))
         for A in range(0,num_basis_vec): #basis_index
             for B in range(0,num_basis_vec): #basis_index
                 for k in range(0,len(qp)):
-                    M[A+node_idx,B+node_idx] += solution_basis(qp[k],elem_degree,A,elem_domain) * solution_basis(qp[k],elem_degree,B,elem_domain) * w[k] * derivative   
+                    M[A+node_idx,B+node_idx] += solution_basis(qp[k],elem_degree,A,qp_domain) * solution_basis(qp[k],elem_degree,B,qp_domain) * w[k] * derivative   
     return M
 
 class Test_assembleGramMatrix( unittest.TestCase ):
@@ -86,3 +87,25 @@ class Test_assembleGramMatrix( unittest.TestCase ):
         self.assertTrue( numpy.allclose( test_gram_matrix, gold_gram_matrix ) )
         
 unittest.main()
+
+# domain = [ 0, 1 ]
+# degree = [ 1, 1 ]
+# node_coords, ien_array = meshGenerate_New.generateMesh( domain[0], domain[1], degree )
+# solution_basis = basis.evalBernsteinBasis1D
+# num_elems = len(ien_array)
+# M = numpy.zeros((len(node_coords),len(node_coords)))
+# for elem in range(0,num_elems):
+#     elem_nodes = len(ien_array[elem])
+#     elem_degree = elem_nodes - 1
+#     node_idx = ien_array[elem][0]
+#     # node_idx = elem*elem_degree
+#     elem_domain = [node_coords[ien_array[elem][0]],node_coords[ien_array[elem][-1]]]
+#     qp, w = quadrature.computeGaussLegendreQuadrature(elem_nodes)
+#     qp_domain = [-1,1]
+#     num_basis_vec = elem_degree + 1
+#     derivative = (elem_domain[-1] - elem_domain[0]) / 2
+#     # M = numpy.zeros((num_basis_vec,num_basis_vec))
+#     for A in range(0,num_basis_vec): #basis_index
+#         for B in range(0,num_basis_vec): #basis_index
+#             for k in range(0,len(qp)):
+#                 M[A+node_idx,B+node_idx] += solution_basis(qp[k],elem_degree,A,qp_domain) * solution_basis(qp[k],elem_degree,B,qp_domain) * w[k] * derivative   
